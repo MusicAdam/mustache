@@ -1,0 +1,373 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"char",
+				"chargeJump"
+			],
+			[
+				"wall",
+				"wallNormal"
+			],
+			[
+				"userData",
+				"userDataA"
+			],
+			[
+				"setGrou",
+				"setGroupReferencePoint"
+			],
+			[
+				"conten",
+				"contentHeight"
+			],
+			[
+				"Display",
+				"DisplayObjectWrapper"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/D/Projects/3rd party/impact-1.23/impact/index.html",
+			"settings":
+			{
+				"buffer_size": 555,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "lib/game/main.js",
+			"settings":
+			{
+				"buffer_size": 2882,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "lib/game/entities/player.js",
+			"settings":
+			{
+				"buffer_size": 4445,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lib/plugins/box2d/entity.js",
+			"settings":
+			{
+				"buffer_size": 1494,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/Projects/Powerup/lib/plugins/box2d/game.js",
+		"/D/Projects/Powerup/lib/plugins/box2d/lib.js",
+		"/D/Projects/Powerup/lib/game/baseEntity.js",
+		"/D/Projects/Powerup/lib/plugins/box2d/entity.js",
+		"/D/Projects/Powerup/lib/impact/game.js",
+		"/C/xampp/htdocs/powerup/lib/game/levels/test.js",
+		"/D/Projects/3rd party/physics/lib/game/main.js",
+		"/D/Projects/3rd party/physics/lib/game/entities/player.js",
+		"/D/Projects/3rd party/jumpnrun/jumpnrun/lib/game/main.js",
+		"/D/Projects/3rd party/jumpnrun/jumpnrun/lib/game/entities/player.js",
+		"/D/Projects/3rd party/jumpnrun/jumpnrun/lib/game/levels/title.js",
+		"/D/Projects/3rd party/jumpnrun/jumpnrun/index.js",
+		"/D/Projects/3rd party/jumpnrun/jumpnrun/index.html",
+		"/C/Games/visit-www.nosteam.ro.html",
+		"/D/Work/SKStudios/word game/src/settings.lua",
+		"/D/Work/SKStudios/word game/src/scenes/game.lua",
+		"/D/Work/SKStudios/word game/src/cloud.lua",
+		"/C/Users/Adam/Desktop/node-autoscale/test.js",
+		"/C/Users/Adam/Desktop/node-autoscale/index.js",
+		"/D/Work/SKStudios/word game/src/GUI/TileMenu.lua",
+		"/D/Work/SKStudios/word game/src/GUI/Button.lua",
+		"/D/Work/SKStudios/word game/src/GUI/PowersMenu.lua",
+		"/D/Work/SKStudios/word game/src/PowerTile.lua",
+		"/D/Work/SKStudios/word game/src/GUI/TileBoard.lua",
+		"/D/Work/SKStudios/word game/src/main.lua",
+		"/D/Work/SKStudios/word game/src/Tile.lua",
+		"/D/Work/SKStudios/word game/src/DisplayObjectWrapper.lua",
+		"/D/Work/SKStudios/word game/src/GUI/HorizontalScrollMenu.lua",
+		"/D/Work/SKStudios/word game/src/class.lua",
+		"/D/Work/SKStudios/word game/src/scenes/start.lua",
+		"/D/Work/SKStudios/word game/src/json.lua",
+		"/D/Work/SKStudios/word game/src/utility.lua",
+		"/C/Users/Adam/Desktop/jquery.js",
+		"/D/Work/USABalancing/usabalancer/js/jquery-ui-custom.js",
+		"/C/Users/Adam/Desktop/jquery-ui-1.10.3/ui/jquery-ui.js",
+		"/D/Work/USABalancing/usabalancer/templates/sheets/hood_tab.tpl.html",
+		"/C/xampp/htdocs/templates/sheets/hood_tab.tpl.html",
+		"/D/Work/USABalancing/usabalancer/templates/sheets/hood_tab_form.tpl.html",
+		"/D/Projects/Ruby/hello_word.rb",
+		"/D/Work/SKStudios/word game/src/GUI/Popup.lua",
+		"/D/Work/SKStudios/word game/main.lua"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"print",
+			"Initialize",
+			"toFront",
+			"printtable",
+			"null"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/D/Projects/3rd party/impact-1.23/impact/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 555,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								546,
+								546
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "lib/game/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2882,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								544,
+								544
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 270.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "lib/game/entities/player.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4445,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								937,
+								937
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 90.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "lib/plugins/box2d/entity.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1494,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								202,
+								202
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "mustache.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
