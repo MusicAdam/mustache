@@ -2,58 +2,91 @@ package com.gearworks.mos;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.gearworks.mos.state.GameState;
+import com.gearworks.mos.state.StateManager;
 
 public class Client implements ApplicationListener {
-	private OrthographicCamera camera;
-	private SpriteBatch batch;
-	private Texture texture;
-	private Sprite sprite;
+	public static final String TITLE = "Mostache - Client";
+	public static final int V_WIDTH = 320;
+	public static final	int V_HEIGHT = 240;
+	public static final float ASPECT_RATIO = (float)V_WIDTH/(float)V_HEIGHT;
+	public static final int SCALE = 2;
+	
+	public BitmapFont font;
+	
+	protected StateManager sm;
+	
+	private Rectangle viewport;
+	private boolean updateViewport;
+
+	public static OrthographicCamera CreateCamera() {
+		return new OrthographicCamera(V_WIDTH, V_HEIGHT);
+	}
 	
 	@Override
-	public void create() {		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+	public void create() {	
+		sm = new StateManager(this);
+		updateViewport = false;
 		
-		camera = new OrthographicCamera(1, h/w);
-		batch = new SpriteBatch();
+		font = new BitmapFont();
+		font.setColor(Color.BLACK);
 		
-		texture = new Texture(Gdx.files.internal("data/libgdx.png"));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 275);
-		
-		sprite = new Sprite(region);
-		sprite.setSize(0.9f, 0.9f * sprite.getHeight() / sprite.getWidth());
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
+		sm.setState(new GameState());
 	}
 
 	@Override
 	public void dispose() {
-		batch.dispose();
-		texture.dispose();
+		
 	}
 
 	@Override
-	public void render() {		
+	public void render() {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		sprite.draw(batch);
-		batch.end();
+		if(updateViewport){
+			updateViewport = false;
+			
+	        Gdx.gl.glViewport((int) viewport.x, (int) viewport.y,
+                    (int) viewport.width, (int) viewport.height);			
+		}
+		
+		sm.update();
+		sm.render();
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		float aspectRatio = (float)width/(float)height;
+		float scale = 1f;
+		Vector2 crop = new Vector2(0f, 0f);
+		
+		if(aspectRatio > ASPECT_RATIO){
+			scale = (float)height/(float)V_HEIGHT;
+			crop.x = (width - V_WIDTH*scale)/2f;
+		}else if(aspectRatio < ASPECT_RATIO){
+			scale = (float)width/(float)V_WIDTH;
+			crop.y = (height - V_HEIGHT*scale)/2f;
+		}else{
+			scale = (float)width/(float)V_WIDTH;
+		}
+		
+		float w = (float)V_WIDTH*scale;
+		float h = (float)V_HEIGHT*scale;
+		
+		viewport = new Rectangle(crop.x, crop.y, w, h);
+		updateViewport = true;
 	}
 
 	@Override

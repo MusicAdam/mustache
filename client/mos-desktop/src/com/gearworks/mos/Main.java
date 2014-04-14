@@ -6,9 +6,9 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "Mostache - Client";
-		cfg.width = 480;
-		cfg.height = 320;
+		cfg.title = Client.TITLE;
+		cfg.width = Client.V_WIDTH * Client.SCALE;
+		cfg.height = Client.V_HEIGHT * Client.SCALE;
 		
 		new LwjglApplication(new Client(), cfg);
 	}
