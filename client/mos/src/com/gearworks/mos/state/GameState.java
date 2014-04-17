@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -18,24 +21,34 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.gearworks.mos.Client;
 import com.gearworks.mos.game.Entity;
 import com.gearworks.mos.game.entities.PlayerEntity;
+import com.gearworks.mos.game.levels.TestLevel;
 
 public class GameState implements State {
 	private static int ID = 0;
-	
+
+	protected List<Entity> entities;
 	protected SpriteBatch batch;
 	
-	private List<Entity> entities;
+	private TestLevel testLevel;
 
 	@Override
 	public void render(Client game) {
 		batch.begin();
 		game.font.draw(batch, "GameState.render()", 100, 50);
+		for(Entity ent : entities){
+			ent.render(batch);
+		}
 		batch.end();
+		testLevel.render();
 	}
 
 	@Override
 	public void update(Client game) {
+		for(Entity ent : entities){
+			ent.update();
+		}
 		
+		testLevel.update();
 	}
 
 	@Override
@@ -43,15 +56,10 @@ public class GameState implements State {
 		entities = new ArrayList<Entity>();
 		batch = new SpriteBatch();		
 		
-		game.player();
-
-		PolygonShape levelBox = new PolygonShape();  
-		// Set the polygon shape as a box which is twice the size of our view port and 20 high
-		// (setAsBox takes half-width and half-height as arguments)
-		levelBox.setAsBox(game.camera().viewportWidth, 1.0f / PPM);
+		testLevel = new TestLevel(game);
 		
-		Entity level = new Entity(game);
-		Entity.createStaticBody(level, new Vector2(game.camera().viewportWidth/2, 0), levelBox);
+		addEntity(game.player());
+		
 		
 		System.out.println("[GameState::onEnter]");
 	}

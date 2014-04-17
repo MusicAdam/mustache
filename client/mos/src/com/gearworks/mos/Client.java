@@ -43,6 +43,7 @@ public class Client implements ApplicationListener {
 	private boolean updateViewport;
 	private World world;
 	private OrthographicCamera camera;
+	private OrthographicCamera box2dCamera;
 	private Box2DDebugRenderer dbgRenderer;
 	private PlayerEntity player;
 	private FPSLogger fpsLogger;
@@ -52,8 +53,10 @@ public class Client implements ApplicationListener {
 		fpsLogger = new FPSLogger();
 
 		//Camera
+		box2dCamera = new OrthographicCamera();
+		box2dCamera.setToOrtho(false, V_WIDTH / PPM, V_HEIGHT / PPM);
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, V_WIDTH / PPM, V_HEIGHT / PPM);
+		camera.setToOrtho(false, V_WIDTH, V_HEIGHT);
 		updateViewport = false;
 		
 		//Box2d
@@ -100,9 +103,9 @@ public class Client implements ApplicationListener {
 			
 			sm.update();
 			camera.update();
-			
+
+			dbgRenderer.render(world, box2dCamera.combined);
 			sm.render();
-			dbgRenderer.render(world, camera.combined);
 			
 			//Step
 			world.step(1/60f, 6, 2);
@@ -145,7 +148,7 @@ public class Client implements ApplicationListener {
 	public void resume() {
 	}
 	
-	public Camera camera(){ return camera; }
+	public OrthographicCamera camera(){ return camera; }
 	public World world(){ return world; }
 	
 	//singleton player 
