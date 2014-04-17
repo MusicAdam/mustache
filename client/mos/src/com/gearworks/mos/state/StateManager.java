@@ -3,7 +3,10 @@ package com.gearworks.mos.state;
 import com.gearworks.mos.Client;
 
 public class StateManager {
-
+	protected State state;
+	protected Client clientRef;
+	
+	//Compares state id's
 	public static boolean statesEqual(State state, State cState){
 		if(state == null || cState == null) return false;
 		if(state.getId() == cState.getId()){
@@ -43,6 +46,4 @@ public class StateManager {
 		return true;
 	}
 	
-	protected State state;
-	protected Client clientRef;
 }

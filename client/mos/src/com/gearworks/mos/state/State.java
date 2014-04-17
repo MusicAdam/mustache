@@ -1,6 +1,7 @@
 package com.gearworks.mos.state;
 
 import com.gearworks.mos.Client;
+import com.gearworks.mos.game.Entity;
 
 public interface State {
 	public void render(Client game);
@@ -9,5 +10,7 @@ public interface State {
 	public void onExit(Client game);
 	public boolean canEnterState(Client game);
 	public boolean canExitState(Client game);
+	public void deleteEntity(Entity ent);
+	public void addEntity(Entity ent);
 	public int getId();
 }

@@ -1,8 +1,11 @@
 package com.gearworks.mos;
 
+import static com.gearworks.mos.Box2DVars.PPM;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,8 +14,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
+import com.gearworks.mos.game.entities.PlayerEntity;
 import com.gearworks.mos.state.GameState;
 import com.gearworks.mos.state.StateManager;
 
@@ -22,6 +29,11 @@ public class Client implements ApplicationListener {
 	public static final	int V_HEIGHT = 240;
 	public static final float ASPECT_RATIO = (float)V_WIDTH/(float)V_HEIGHT;
 	public static final int SCALE = 2;
+	public static float CAMERA_TO_BOX = .01f;
+	public static float BOX_TO_CAMERA = 10f;
+	
+	public static final float STEP = 1 / 60f;
+	private float accum;
 	
 	public BitmapFont font;
 	
@@ -29,41 +41,77 @@ public class Client implements ApplicationListener {
 	
 	private Rectangle viewport;
 	private boolean updateViewport;
-
-	public static OrthographicCamera CreateCamera() {
-		return new OrthographicCamera(V_WIDTH, V_HEIGHT);
-	}
+	private World world;
+	private OrthographicCamera camera;
+	private Box2DDebugRenderer dbgRenderer;
+	private PlayerEntity player;
+	private FPSLogger fpsLogger;
 	
 	@Override
 	public void create() {	
-		sm = new StateManager(this);
+		fpsLogger = new FPSLogger();
+
+		//Camera
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, V_WIDTH / PPM, V_HEIGHT / PPM);
 		updateViewport = false;
+		
+		//Box2d
+		world = new World(new Vector2(0, -10f), true);
+		dbgRenderer = new Box2DDebugRenderer();
+		
+		//State Manager
+		sm = new StateManager(this);
+		sm.setState(new GameState());
+		
 		
 		font = new BitmapFont();
 		font.setColor(Color.BLACK);
-		
-		sm.setState(new GameState());
 	}
 
 	@Override
 	public void dispose() {
-		
+		world.dispose();
 	}
 
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		//Update viewport
 		if(updateViewport){
 			updateViewport = false;
 			
 	        Gdx.gl.glViewport((int) viewport.x, (int) viewport.y,
-                    (int) viewport.width, (int) viewport.height);			
+                    (int) viewport.width, (int) viewport.height);
+	        
+	        camera.viewportWidth = viewport.width;
+	        camera.viewportHeight = viewport.height;
+	        System.out.println("UPDATE VIEWPORT");
 		}
 		
-		sm.update();
-		sm.render();
+
+		//Render
+		Gdx.gl.glClearColor(.21f, .21f, .21f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		accum += Gdx.graphics.getDeltaTime();
+		while(accum >= STEP) {
+			accum -= STEP;
+			
+			sm.update();
+			camera.update();
+			
+			sm.render();
+			dbgRenderer.render(world, camera.combined);
+			
+			//Step
+			world.step(1/60f, 6, 2);
+		}
+		
+		
+		
+		
+		//fpsLogger.log();
 	}
 
 	@Override
@@ -86,7 +134,7 @@ public class Client implements ApplicationListener {
 		float h = (float)V_HEIGHT*scale;
 		
 		viewport = new Rectangle(crop.x, crop.y, w, h);
-		updateViewport = true;
+		//updateViewport = true;
 	}
 
 	@Override
@@ -95,5 +143,16 @@ public class Client implements ApplicationListener {
 
 	@Override
 	public void resume() {
+	}
+	
+	public Camera camera(){ return camera; }
+	public World world(){ return world; }
+	
+	//singleton player 
+	public PlayerEntity player(){ 
+		if(player == null)
+			player = new PlayerEntity(this);
+		
+		return player;
 	}
 }
