@@ -16,7 +16,8 @@ public class Entity {
 	protected Client game;
 	
 	//Make sure to dispose of the fixture definition's shape 
-	public static Body createDynamicBody(Entity ent, Vector2 pos, FixtureDef fixDef) {
+	//Creates a dynamic body and returns the associated entity
+	public static Entity createDynamicBody(Entity ent, Vector2 pos, FixtureDef fixDef) {
 		//Create body def
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
@@ -28,11 +29,12 @@ public class Entity {
 		//Create Fixture
 		ent.body.createFixture(fixDef);
 		
-		return ent.body;
+		return ent;
 	}
 	
 	//Make sure to dispose of the fixture definition's shape 
-	public static Body createStaticBody(Entity ent, Vector2 pos, Shape shape) {
+	//Creates a static body and returns the associated entity
+	public static Entity createStaticBody(Entity ent, Vector2 pos, Shape shape) {
 		//Create body def
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.StaticBody;
@@ -44,7 +46,7 @@ public class Entity {
 		//Create Fixture
 		ent.body.createFixture(shape, 0.0f);
 		
-		return ent.body;
+		return ent;
 	}
 	
 	public Entity(Client cRef){

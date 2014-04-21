@@ -1,6 +1,7 @@
 package com.gearworks.mos;
 
 import static com.gearworks.mos.Box2DVars.PPM;
+import static com.gearworks.mos.Box2DVars.MPP;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -29,8 +30,6 @@ public class Client implements ApplicationListener {
 	public static final	int V_HEIGHT = 240;
 	public static final float ASPECT_RATIO = (float)V_WIDTH/(float)V_HEIGHT;
 	public static final int SCALE = 2;
-	public static float CAMERA_TO_BOX = .01f;
-	public static float BOX_TO_CAMERA = 10f;
 	
 	public static final float STEP = 1 / 60f;
 	private float accum;
@@ -103,13 +102,14 @@ public class Client implements ApplicationListener {
 			
 			sm.update();
 			camera.update();
-
-			dbgRenderer.render(world, box2dCamera.combined);
-			sm.render();
 			
 			//Step
 			world.step(1/60f, 6, 2);
 		}
+		
+
+		dbgRenderer.render(world, box2dCamera.combined);
+		sm.render();
 		
 		
 		

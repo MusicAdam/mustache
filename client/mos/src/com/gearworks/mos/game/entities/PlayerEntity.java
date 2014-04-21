@@ -24,10 +24,10 @@ public class PlayerEntity extends Entity {
 	public PlayerEntity(Client cRef) {
 		super(cRef);
 		//Average human size in meters
-		Vector2 size = new Vector2(8, 14);
+		Vector2 size = new Vector2(.6f, 1.2f);
 		
 		texture = new Texture(Gdx.files.internal("sprites/player.png"));
-		idleSprite = new Sprite(texture, 0, 0, (int)size.x, (int)size.y);
+		idleSprite = new Sprite(texture, 0, 0, 8, 14);
 		idleSprite.setPosition(10,  10);
 		/////////	Setup Box2d
 		
@@ -35,7 +35,7 @@ public class PlayerEntity extends Entity {
 		PolygonShape playerBox = new PolygonShape();  
 		// Set the polygon shape as a box which is twice the size of our view port and 20 high
 		// (setAsBox takes half-width and half-height as arguments)
-		playerBox.setAsBox(size.x / PPM, size.y / PPM);
+		playerBox.setAsBox(size.x, size.y);
 		
 		// Create a fixture definition 
 		FixtureDef fixtureDef = new FixtureDef();
@@ -45,8 +45,8 @@ public class PlayerEntity extends Entity {
 		fixtureDef.restitution = 0f; // Make it bounce a little bit
 		
 		Vector2 pos = new Vector2(
-					1,
-					1
+					10,
+					10
 				);
 		
 		createDynamicBody(this, pos, fixtureDef);

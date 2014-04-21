@@ -22,6 +22,15 @@ public class Level {
 	public void load(String name){
 		tileMap = new TmxMapLoader().load(name);
 		mapRenderer = new OrthogonalTiledMapRenderer(tileMap);
+		
+		createCollisionMap();
+	}
+	
+	private void createCollisionMap(){
+		if(tileMap == null) return;
+		
+		//tileMap.
+		
 	}
 
 	public void render() {
