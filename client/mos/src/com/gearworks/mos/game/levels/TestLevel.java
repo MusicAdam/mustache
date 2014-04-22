@@ -11,10 +11,6 @@ public class TestLevel extends Level {
 	public TestLevel(Client game) {
 		super(game);
 		load("maps/test.tmx");
-		
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(game.camera().viewportWidth, 1f);
-		Entity.createStaticBody(new Entity(game), new Vector2(0, 0), shape);
 	}
 
 }

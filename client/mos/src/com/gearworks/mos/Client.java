@@ -26,8 +26,8 @@ import com.gearworks.mos.state.StateManager;
 
 public class Client implements ApplicationListener {
 	public static final String TITLE = "Mostache - Client";
-	public static final int V_WIDTH = 320;
-	public static final	int V_HEIGHT = 240;
+	public static final int V_WIDTH = 520;
+	public static final	int V_HEIGHT = 440;
 	public static final float ASPECT_RATIO = (float)V_WIDTH/(float)V_HEIGHT;
 	public static final int SCALE = 2;
 	

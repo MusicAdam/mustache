@@ -39,7 +39,7 @@ public class GameState implements State {
 			ent.render(batch);
 		}
 		batch.end();
-		testLevel.render();
+		//testLevel.render();
 	}
 
 	@Override

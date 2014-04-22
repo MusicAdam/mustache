@@ -13,4 +13,9 @@
    eJzt2MENACEIAEHsv2kL4PyIyS1kN+ELmaeuiFhDpns6WOlgpYOVDlY6WOlgpYOVDlY6WOnIO/589+vIO3TU05F3dHcQOjm6/aPqYKWD1XTH7Z6Xc3O/mg4dX/erURwTZgNqJQF0
   </data>
  </layer>
+ <objectgroup name="collision" width="50" height="40">
+  <object x="136" y="272" width="168" height="48"/>
+  <object x="304" y="312" width="96" height="8"/>
+  <object x="0" y="312" width="136" height="8"/>
+ </objectgroup>
 </map>

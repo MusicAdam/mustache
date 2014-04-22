@@ -10,7 +10,12 @@
  </tileset>
  <layer name="background" width="50" height="40">
   <data encoding="base64" compression="zlib">
-   eJztl0EOgCAMBPH/nzbejKF0S8WuZCfhoGLpADZ4tNaOTdrfkQcX8uBCHlzIgwt5fAOa20qP3rkneiaq9BjlbvW1+lR7WDl443nnWOvdL9bjmUPknI3uw5Ue99je+OgaeX1WEZ136xnSh6XuIrXLqxeVRGswq8eFt6fu16s8Zv770XfYPXox0PuWL4vHKD8vbrUHkl8khwxZj1GsaA4Z3thXWVjqbhbvu6meZxR5cCEPLnb3mI3zZpsZP4s85NEbPwuLxw7tBIp2Ad8=
+   eJzt2MENACEIAEHsv2kL4PyIyS1kN+ELmaeuiFhDpns6WOlgpYOVDlY6WOlgpYOVDlY6WOnIO/589+vIO3TU05F3dHcQOjm6/aPqYKWD1XTH7Z6Xc3O/mg4dX/erURwTZgNqJQF0
   </data>
  </layer>
+ <objectgroup name="collision" width="50" height="40">
+  <object x="136" y="272" width="168" height="48"/>
+  <object x="304" y="312" width="96" height="8"/>
+  <object x="0" y="312" width="136" height="8"/>
+ </objectgroup>
 </map>
