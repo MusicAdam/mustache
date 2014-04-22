@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.gearworks.mos.Box2DVars;
 import com.gearworks.mos.Client;
 import com.gearworks.mos.game.Entity;
 
@@ -46,7 +47,7 @@ public class PlayerEntity extends Entity {
 		
 		Vector2 pos = new Vector2(
 					10,
-					10
+					1
 				);
 		
 		createDynamicBody(this, pos, fixtureDef);
@@ -57,6 +58,7 @@ public class PlayerEntity extends Entity {
 	@Override
 	public void update(){
 		idleSprite.setPosition(body().getPosition().x * PPM, body().getPosition().y * PPM);
+		moveRight();
 	}
 	
 	@Override
@@ -67,5 +69,14 @@ public class PlayerEntity extends Entity {
 	@Override
 	public void dispose(){
 		
+	}
+	
+	public void moveRight(){
+		body().applyForce(new Vector2(1.0f, 0f), body().getPosition(), true);
+	}
+	
+	//Returns the player's position in pixels
+	public Vector2 getPosition(){
+		return body().getPosition().scl(Box2DVars.PPM);
 	}
 }

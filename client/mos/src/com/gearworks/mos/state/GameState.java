@@ -33,13 +33,14 @@ public class GameState implements State {
 
 	@Override
 	public void render(Client game) {
+		batch.setProjectionMatrix(game.camera().combined);
 		batch.begin();
 		game.font.draw(batch, "GameState.render()", 100, 50);
 		for(Entity ent : entities){
 			ent.render(batch);
 		}
 		batch.end();
-		//testLevel.render();
+		testLevel.render();
 	}
 
 	@Override
@@ -49,6 +50,9 @@ public class GameState implements State {
 		}
 		
 		testLevel.update();
+		
+		Vector2 plPos = game.player().getPosition();
+		game.camera().position.set(plPos.x, plPos.y, 0f);
 	}
 
 	@Override
