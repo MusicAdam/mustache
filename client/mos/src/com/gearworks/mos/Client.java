@@ -4,6 +4,7 @@ import static com.gearworks.mos.Box2DVars.PPM;
 import static com.gearworks.mos.Box2DVars.MPP;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -42,20 +43,22 @@ public class Client implements ApplicationListener {
 	private boolean updateViewport;
 	private World world;
 	private OrthographicCamera camera;
-	private OrthographicCamera box2dCamera;
 	private Box2DDebugRenderer dbgRenderer;
 	private PlayerEntity player;
 	private FPSLogger fpsLogger;
+	private InputMultiplexer inputMultiplexer;
 	
 	@Override
 	public void create() {	
 		fpsLogger = new FPSLogger();
 
+		inputMultiplexer = new InputMultiplexer();
+		Gdx.input.setInputProcessor(inputMultiplexer);
+		
 		//Camera
-		box2dCamera = new OrthographicCamera();
-		box2dCamera.setToOrtho(false, V_WIDTH / PPM, V_HEIGHT / PPM);
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, V_WIDTH, V_HEIGHT);
+		//camera.zoom = MPP;
 		updateViewport = false;
 		
 		//Box2d
@@ -109,7 +112,8 @@ public class Client implements ApplicationListener {
 		
 
 		sm.render();
-		dbgRenderer.render(world, box2dCamera.combined);
+		Matrix4 dbgMatrix = camera.combined.cpy().scl(PPM);
+		dbgRenderer.render(world, dbgMatrix);
 		
 		
 		
@@ -137,7 +141,7 @@ public class Client implements ApplicationListener {
 		float h = (float)V_HEIGHT*scale;
 		
 		viewport = new Rectangle(crop.x, crop.y, w, h);
-		//updateViewport = true;
+		updateViewport = true;
 	}
 
 	@Override
@@ -153,8 +157,10 @@ public class Client implements ApplicationListener {
 	
 	//singleton player 
 	public PlayerEntity player(){ 
-		if(player == null)
+		if(player == null){
 			player = new PlayerEntity(this);
+			inputMultiplexer.addProcessor(player);
+		}
 		
 		return player;
 	}

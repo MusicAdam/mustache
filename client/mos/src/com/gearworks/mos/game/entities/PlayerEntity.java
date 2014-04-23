@@ -2,7 +2,13 @@ package com.gearworks.mos.game.entities;
 
 import static com.gearworks.mos.Box2DVars.PPM;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,27 +22,35 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.gearworks.mos.Box2DVars;
 import com.gearworks.mos.Client;
+import com.gearworks.mos.InputMapper;
 import com.gearworks.mos.game.Entity;
 
-public class PlayerEntity extends Entity {
+public class PlayerEntity extends Entity implements InputProcessor {
 	private Texture texture;
 	private Sprite idleSprite;
+	private InputMapper inputMapper;
+	private List<String> inputState;
 	
 	public PlayerEntity(Client cRef) {
 		super(cRef);
+		
+		inputState = new ArrayList<String>();
+		inputMapper = new InputMapper();
+		inputMapper.put("jump", Input.Keys.SPACE);
+		inputMapper.put("left", Input.Keys.A);
+		inputMapper.put("right", Input.Keys.D);
+		
 		//Average human size in meters
-		Vector2 size = new Vector2(.6f, 1.2f);
+		Vector2 size = new Vector2(8, 14);
 		
 		texture = new Texture(Gdx.files.internal("sprites/player.png"));
 		idleSprite = new Sprite(texture, 0, 0, 8, 14);
-		idleSprite.setPosition(10,  10);
 		/////////	Setup Box2d
 		
 		// Create a polygon shape
 		PolygonShape playerBox = new PolygonShape();  
-		// Set the polygon shape as a box which is twice the size of our view port and 20 high
 		// (setAsBox takes half-width and half-height as arguments)
-		playerBox.setAsBox(size.x, size.y);
+		playerBox.setAsBox(size.x * 0.5f / PPM, size.y * 0.5f / PPM);
 		
 		// Create a fixture definition 
 		FixtureDef fixtureDef = new FixtureDef();
@@ -57,8 +71,9 @@ public class PlayerEntity extends Entity {
 	
 	@Override
 	public void update(){
-		idleSprite.setPosition(body().getPosition().x * PPM, body().getPosition().y * PPM);
 		moveRight();
+		
+		followBody();
 	}
 	
 	@Override
@@ -77,6 +92,77 @@ public class PlayerEntity extends Entity {
 	
 	//Returns the player's position in pixels
 	public Vector2 getPosition(){
-		return body().getPosition().scl(Box2DVars.PPM);
+		return body().getPosition().scl(PPM);
+	}
+	
+	//Update the sprite's position to that of the body
+	private void followBody(){
+		idleSprite.setPosition( (body().getPosition().x * PPM - idleSprite.getWidth() * 0.5f), 
+								(body().getPosition().y * PPM - idleSprite.getHeight() * 0.5f) );
+	}
+	
+	public void processInput(String key, boolean active){
+		if(key == "jump" && active){
+			System.out.println("Jump");
+		}
+	}
+	
+	@Override
+	public boolean keyDown(int keycode) {
+		String key = inputMapper.getMapping(keycode);
+		
+		if(key != null){
+			processInput(key, true);
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		String key = inputMapper.getMapping(keycode);
+		
+		if(key != null){
+			processInput(key, false);
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		//Handle mouse down
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		//Handle mouse up
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		//Don't handle this event
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		//Don't handle this event
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		//Don't handle this event
+		return false;
 	}
 }
