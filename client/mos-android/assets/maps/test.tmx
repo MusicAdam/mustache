@@ -14,8 +14,12 @@
   </data>
  </layer>
  <objectgroup name="collision" width="50" height="40">
-  <object x="136" y="272" width="168" height="48"/>
-  <object x="304" y="312" width="96" height="8"/>
-  <object x="0" y="312" width="136" height="8"/>
+  <object x="136" y="272" width="168" height="40"/>
+  <object x="0" y="312" width="400" height="8"/>
+  <object x="0" y="0" width="8" height="312"/>
+  <object x="8" y="0" width="384" height="8"/>
+  <object x="392" y="0" width="8" height="312"/>
+  <object x="128" y="168" width="56" height="48"/>
+  <object x="40" y="224" width="64" height="48"/>
  </objectgroup>
 </map>
