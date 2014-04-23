@@ -57,13 +57,12 @@ public class Level {
 
     private static PolygonShape getPolygon(PolygonMapObject polygonObject) {
         PolygonShape polygon = new PolygonShape();
-        float[] vertices = polygonObject.getPolygon().getTransformedVertices();
+        float[] vertices = polygonObject.getPolygon().getVertices();
 
         float[] worldVertices = new float[vertices.length];
 
         for (int i = 0; i < vertices.length; ++i) {
-            System.out.println(vertices[i]);
-            worldVertices[i] = vertices[i] / PPM;
+            worldVertices[i] = (vertices[i]) / PPM;
         }
 
         polygon.set(worldVertices);
@@ -71,7 +70,7 @@ public class Level {
     }
     
     private static ChainShape getPolyline(PolylineMapObject polylineObject) {
-        float[] vertices = polylineObject.getPolyline().getTransformedVertices();
+        float[] vertices = polylineObject.getPolyline().getVertices();
         Vector2[] worldVertices = new Vector2[vertices.length / 2];
 
         for (int i = 0; i < vertices.length / 2; ++i) {
