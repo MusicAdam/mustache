@@ -29,49 +29,40 @@ public class PlayerEntity extends Entity implements InputProcessor {
 	private Texture texture;
 	private Sprite idleSprite;
 	private InputMapper inputMapper;
-	private List<String> inputState;
+	
+	//TODO: Move this to MoveState class
+	private boolean inputLeft;
+	private boolean inputRight;
+	private boolean inputJump;
 	
 	public PlayerEntity(Client cRef) {
 		super(cRef);
 		
-		inputState = new ArrayList<String>();
 		inputMapper = new InputMapper();
 		inputMapper.put("jump", Input.Keys.SPACE);
 		inputMapper.put("left", Input.Keys.A);
 		inputMapper.put("right", Input.Keys.D);
 		
-		//Average human size in meters
 		Vector2 size = new Vector2(8, 14);
 		
 		texture = new Texture(Gdx.files.internal("sprites/player.png"));
 		idleSprite = new Sprite(texture, 0, 0, 8, 14);
-		/////////	Setup Box2d
 		
-		// Create a polygon shape
-		PolygonShape playerBox = new PolygonShape();  
-		// (setAsBox takes half-width and half-height as arguments)
-		playerBox.setAsBox(size.x * 0.5f / PPM, size.y * 0.5f / PPM);
-		
-		// Create a fixture definition 
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = playerBox;
-		fixtureDef.density = 0.1f; 
-		fixtureDef.friction = 0.4f;
-		fixtureDef.restitution = 0f; // Make it bounce a little bit
-		
-		Vector2 pos = new Vector2(
-					10,
-					1
-				);
-		
-		createDynamicBody(this, pos, fixtureDef);
-		
-		playerBox.dispose();
+		createPhysics(size);
+		resetMoveState();
 	}
 	
 	@Override
 	public void update(){
-		moveRight();
+		if(inputRight){
+			moveRight();
+		}else if(inputLeft){
+			moveLeft();
+		}
+		
+		if(inputJump){
+			doJump();
+		}
 		
 		followBody();
 	}
@@ -83,11 +74,20 @@ public class PlayerEntity extends Entity implements InputProcessor {
 	
 	@Override
 	public void dispose(){
-		
+		texture.dispose();
+		idleSprite = null;
 	}
 	
 	public void moveRight(){
 		body().applyForce(new Vector2(1.0f, 0f), body().getPosition(), true);
+	}
+	
+	public void moveLeft(){
+		body().applyForce(new Vector2(-1.0f, 0f), body().getPosition(), true);
+	}
+	
+	public void doJump(){
+		body().applyForce(new Vector2(0f, 10.0f), body().getPosition(), true);
 	}
 	
 	//Returns the player's position in pixels
@@ -102,8 +102,16 @@ public class PlayerEntity extends Entity implements InputProcessor {
 	}
 	
 	public void processInput(String key, boolean active){
-		if(key == "jump" && active){
-			System.out.println("Jump");
+		if(key == "right"){
+			inputRight = active;
+		}
+
+		if(key == "left"){
+			inputLeft = active;
+		}
+		
+		if(key == "jump"){
+			inputJump = active;
 		}
 	}
 	
@@ -164,5 +172,34 @@ public class PlayerEntity extends Entity implements InputProcessor {
 	public boolean scrolled(int amount) {
 		//Don't handle this event
 		return false;
+	}
+	
+	//Initialize the player's collision body
+	private void createPhysics(Vector2 size){
+		// Create a polygon shape
+		PolygonShape playerBox = new PolygonShape();  
+		// (setAsBox takes half-width and half-height as arguments)
+		playerBox.setAsBox(size.x * 0.5f / PPM, size.y * 0.5f / PPM);
+		
+		// Create a fixture definition 
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = playerBox;
+		fixtureDef.density = 0.1f; 
+		fixtureDef.friction = 0.4f;
+		fixtureDef.restitution = 0f; // Make it bounce a little bit
+		
+		Vector2 pos = new Vector2(10, 1);
+		
+		createDynamicBody(this, pos, fixtureDef);
+		body().setFixedRotation(true);
+		
+		playerBox.dispose();
+	}
+	
+	//Reset move state
+	private void resetMoveState(){
+		inputLeft 	= false;
+		inputRight 	= false;
+		inputJump 	= false;
 	}
 }
