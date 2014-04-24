@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -13,6 +14,7 @@ import com.gearworks.mos.Client;
 //Should be shared 
 public class Entity {
 	private Body body;
+	private EntityType type;
 	protected Client game;
 	
 	//Make sure to dispose of the fixture definition's shape 
@@ -49,8 +51,9 @@ public class Entity {
 		return ent;
 	}
 	
-	public Entity(Client cRef){
+	public Entity(EntityType type, Client cRef){
 		game = cRef;
+		this.type = type;
 	}
 	
 	public Body body() {
@@ -66,9 +69,12 @@ public class Entity {
 	public void render(SpriteBatch batch){}
 	public void update(){}
 	
-	public void dispose(){
-		body = null;
-		game = null;
-	}
+	public void dispose(){}
 	
+	public void beginContact(Entity ent, Contact contact){}
+	public void endContact(Entity ent, Contact contact){}
+
+	public EntityType type() {
+		return type;
+	}
 }

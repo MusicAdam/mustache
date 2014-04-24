@@ -33,7 +33,7 @@ public class Level {
 	private TiledMap tileMap;
 	private OrthogonalTiledMapRenderer mapRenderer;
 	private Client game;
-	private Array<Entity> collisionBodies;
+	private Array<Entity> collisionEntities;
 	
 	private static PolygonShape getRectangle(RectangleMapObject rectangleObject) {
         Rectangle rectangle = rectangleObject.getRectangle();
@@ -86,7 +86,7 @@ public class Level {
 	
 	public Level(Client game){
 		this.game = game;
-		collisionBodies = new Array<Entity>();
+		collisionEntities = new Array<Entity>();
 	}
 	
 	public void load(String name){
@@ -124,8 +124,9 @@ public class Level {
 					(Float)object.getProperties().get("x") / PPM,
 					(Float)object.getProperties().get("y") / PPM);
 			
-			Entity collisionEnt = Entity.createStaticBody(new Entity(game), position, shape);
-			collisionBodies.add(collisionEnt);
+			Entity collisionEnt = Entity.createStaticBody(new Entity(EntityType.Wall, game), position, shape);
+			collisionEnt.body().setUserData(collisionEnt);
+			collisionEntities.add(collisionEnt);
 			shape.dispose();
 		}
 		

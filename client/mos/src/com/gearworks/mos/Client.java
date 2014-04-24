@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.gearworks.mos.game.ContactHandler;
 import com.gearworks.mos.game.entities.PlayerEntity;
 import com.gearworks.mos.state.GameState;
 import com.gearworks.mos.state.StateManager;
@@ -57,6 +58,7 @@ public class Client implements ApplicationListener {
 		
 		//Box2d
 		world = new World(new Vector2(0, -10f), true);
+		world.setContactListener(new ContactHandler());
 		dbgRenderer = new Box2DDebugRenderer();
 		
 		//State Manager
@@ -107,7 +109,7 @@ public class Client implements ApplicationListener {
 
 		sm.render();
 		Matrix4 dbgMatrix = camera.combined.cpy().scl(PPM);
-		dbgRenderer.render(world, dbgMatrix);
+		//dbgRenderer.render(world, dbgMatrix);
 		
 		
 		
