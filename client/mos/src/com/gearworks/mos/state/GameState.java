@@ -1,26 +1,12 @@
 package com.gearworks.mos.state;
 
-import static com.gearworks.mos.Box2DVars.PPM;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.gearworks.mos.Client;
 import com.gearworks.mos.game.Entity;
-import com.gearworks.mos.game.entities.PlayerEntity;
 import com.gearworks.mos.game.levels.TestLevel;
 
 public class GameState implements State {
@@ -52,7 +38,7 @@ public class GameState implements State {
 		testLevel.update();
 		
 		Vector2 plPos = game.player().getPosition();
-		game.camera().position.set(plPos.x, plPos.y, 0f);
+		game.camera().position.set(game.camera().position.x + (plPos.x - game.camera().position.x)/4, game.camera().position.y + (plPos.y - game.camera().position.y)/4, 0f);
 	}
 
 	@Override
@@ -63,7 +49,6 @@ public class GameState implements State {
 		testLevel = new TestLevel(game);
 		
 		addEntity(game.player());
-		
 		
 		System.out.println("[GameState::onEnter]");
 	}

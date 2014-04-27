@@ -10,7 +10,7 @@
  </tileset>
  <layer name="background" width="50" height="40">
   <data encoding="base64" compression="zlib">
-   eJzt2TEOwCAMwMDw/0+zM7QipJIbbCkjhJsZETGazN/TwUoHKx2sdLDSwUoHKx2sdLDSwUoHKx2sdLDSwUrH2Z7qvV853t5d7dKxd6+O3L7s+fWOCsfOP5OO511dHZl33OzoMBN3OAET
+   eJzt2bEOABAMANH2/3/abiuNHO4Sg4F6s4yIfGTdng5WOljpYKWDlQ5WOljpYKWDlQ5WOljpYKWDlQ5WOljp2JvTPVdH7d7qfndeVzp65q2en+/ocFT+/U45Vt7xs+OFNQC7WQDz
   </data>
  </layer>
  <objectgroup name="collision" width="50" height="40">
@@ -18,11 +18,11 @@
   <object x="0" y="0" width="8" height="312"/>
   <object x="8" y="0" width="384" height="8"/>
   <object x="392" y="0" width="8" height="312"/>
-  <object x="120" y="272" width="24" height="40"/>
-  <object x="168" y="240" width="16" height="72"/>
-  <object x="200" y="232" width="16" height="64"/>
-  <object x="232" y="232" width="16" height="64"/>
-  <object x="264" y="240" width="16" height="72"/>
-  <object x="304" y="272" width="24" height="40"/>
+  <object x="120" y="288" width="24" height="24"/>
+  <object x="168" y="264" width="16" height="48"/>
+  <object x="200" y="248" width="16" height="48"/>
+  <object x="232" y="248" width="16" height="48"/>
+  <object x="264" y="264" width="16" height="48"/>
+  <object x="304" y="288" width="24" height="24"/>
  </objectgroup>
 </map>

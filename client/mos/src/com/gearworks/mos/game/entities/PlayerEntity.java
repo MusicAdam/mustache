@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -28,12 +29,14 @@ import com.gearworks.mos.game.Entity;
 import com.gearworks.mos.game.EntityType;
 
 public class PlayerEntity extends Entity implements InputProcessor {	
-	public final float groundJump 	= 1f;	//The impulse applied when jumping from the ground
-	public final float wallJump 	= .8f;	//The impulse applied when jumping from a wall
+	public final float groundJump 	= .8f;	//The impulse applied when jumping from the ground
+	public final float wallJump 	= .4f;	//The impulse applied when jumping from a wall
 	public final float pushStrength	= 100f; //Force applied to push off of wall
 	public final float groundForce  = 1.2f;	//The force applied to ground movement
 	public final float airForce  	= .8f;	//The force applied to air movement
-	public final float stickiness 	= 2.4f;  //How much the player sticks to the wall
+	public final float groundSpeed	= 10;  //10 M/s
+	public final float airSpeed		= 5;  //M/s
+	public final float stickiness 	= 3f;  //How much the player sticks to the wall
 	
 	private Texture texture;
 	private Sprite idleSprite;
@@ -43,11 +46,15 @@ public class PlayerEntity extends Entity implements InputProcessor {
 	private boolean inputLeft;
 	private boolean inputRight;
 	private boolean inputJump;
-	private boolean canWallJump; //Gets set to true on wall contact and false on space release/wall jump/end wall contact
+	private boolean inputUp;
+	private boolean inputDown;
+	private boolean stuckToWall; //Gets set to true if the player grabs the wall (is touching and moves into the wall)
 	
 	private Entity onWall;
 	private Vector2 wallNorm;
 	private Entity onGround;
+	
+	private ArmGhost gostArms;
 	
 	private int width, height;
 	
@@ -58,6 +65,8 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		inputMapper.put("jump", Input.Keys.SPACE);
 		inputMapper.put("left", Input.Keys.A);
 		inputMapper.put("right", Input.Keys.D);
+		inputMapper.put("down", Input.Keys.S);
+		inputMapper.put("up", Input.Keys.W);
 		
 		Vector2 size = new Vector2(8, 14);
 		width = 8;
@@ -66,7 +75,6 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		texture = new Texture(Gdx.files.internal("sprites/player.png"));
 		idleSprite = new Sprite(texture, 0, 0, width, height);
 		
-		createPhysics();
 		resetMoveState();
 	}
 	
@@ -77,17 +85,33 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		Vector2 force = new Vector2();
 		Vector2 impulse = new Vector2();
 		
-		if(inputRight){
-			moveRight(force);
-		}else if(inputLeft){
-			moveLeft(force);
+		if(body().getLinearVelocity().len() < calculateSpeed()){
+			if(inputRight){
+				moveRight(force);
+				
+				if(onWall() && wallNorm.x == -1){
+					stuckToWall = true;
+				}
+			}else if(inputLeft){
+				moveLeft(force);
+				
+				if(onWall() && wallNorm.x == 1){
+					stuckToWall = true;
+				}
+			}
 		}
 					
 		
 		if(inputJump){
-			doJump(impulse);
-		}else if(canWallJump){
-			doWallJump(impulse);
+			if(onWall()){
+				doWallJump(impulse);
+			}else{
+				doJump(impulse);
+			}
+		}
+		
+		if(stuckToWall && inputDown){
+			stuckToWall = false;
 		}
 		
 		doStick(force);
@@ -96,9 +120,18 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		body().applyLinearImpulse(impulse, body().getPosition(), true);
 	}
 
+	private float calculateSpeed() {
+		if(onGround()){
+			return groundSpeed;
+		}else{
+			return airSpeed;
+		}
+	}
+
 	@Override
 	public void render(SpriteBatch batch){
 		idleSprite.draw(batch);
+		renderDbg(batch);
 	}
 	
 	@Override
@@ -132,24 +165,25 @@ public class PlayerEntity extends Entity implements InputProcessor {
 	}
 	
 	public void doWallJump(Vector2 impulse){
-		if(!onWall() || onGround() || !canWallJump) return;
+		if(!onWall() || onGround()) return;
 		
-		impulse.add(new Vector2(wallJump * 0.5f, wallJump * 0.5f));
+		Vector2 jump = wallNorm.cpy().add(0, .8f).scl(wallJump);
+		System.out.println(jump);
+		
+		impulse.add(jump);
 		onWall(null, null);
+		stuckToWall = false;
 	}
 	
+	//If on wall, hold onto to simulate grabbing, if stuck, multiply that so it sticks
 	private void doStick(Vector2 force) {
 		if(!onWall()) return;
-
-		float stickScale = stickiness;
+		float stick = stickiness;
 		
-		if(inputJump){
-			stickScale *= -1;
-		}else if(canWallJump){
-			stickScale = pushStrength;
-		}
+		if(stuckToWall)
+			stick *= 10;
 		
-		force.add(wallNorm.cpy().scl(stickScale));
+		force.add(wallNorm.cpy().scl(-1 * stick));
 	}
 	
 	//Returns the player's position in pixels
@@ -159,8 +193,10 @@ public class PlayerEntity extends Entity implements InputProcessor {
 	
 	//Update the sprite's position to that of the body
 	private void followBody(){
-		idleSprite.setPosition( (body().getPosition().x * PPM - idleSprite.getWidth() * 0.5f), 
-								(body().getPosition().y * PPM - idleSprite.getHeight() * 0.5f) );
+		float dX = (body().getPosition().x * PPM - idleSprite.getWidth() * 0.5f) - idleSprite.getX();
+		float dY = (body().getPosition().y * PPM - idleSprite.getHeight() * 0.5f) - idleSprite.getY();
+		idleSprite.setPosition( idleSprite.getX() + dX/2, 
+								idleSprite.getY() + dY/2 );
 	}
 	
 	public void processInput(String key, boolean active){
@@ -174,10 +210,14 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		
 		if(key == "jump"){
 			inputJump = active;
-			
-			if(!active && !onWall()){
-				canWallJump = false;
-			}
+		}
+		
+		if(key == "up"){
+			inputUp = active;
+		}
+		
+		if(key == "down"){
+			inputDown = active;
 		}
 	}
 	
@@ -240,8 +280,18 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		return false;
 	}
 	
-	@Override
-	public void beginContact(Entity ent, Contact cnt){
+	public void beginWallContact(Entity ent, Contact cnt){
+		Fixture fixA = cnt.getFixtureA();
+		Fixture fixB = cnt.getFixtureB();
+		Fixture myFix;
+		
+		//Find which fixture is ours...
+		if(fixA.getBody().getUserData() instanceof PlayerEntity ){
+			myFix = fixA;
+		}else{
+			myFix = fixB;
+		}
+		
 		if(ent.type() == EntityType.Wall){
 			Vector2 normal = cnt.getWorldManifold().getNormal();
 			
@@ -256,8 +306,7 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		}
 	}
 	
-	@Override
-	public void endContact(Entity ent, Contact cnt){
+	public void endWallContact(Entity ent, Contact cnt){
 		if(ent.type() == EntityType.Wall){
 			if(ent == onWall){
 				onWall(null, null);
@@ -278,7 +327,7 @@ public class PlayerEntity extends Entity implements InputProcessor {
 	}
 	
 	//Initialize the player's collision body
-	private void createPhysics(){
+	public void createPhysics(){
 		// Create a polygon shape
 		PolygonShape playerBox = new PolygonShape();  
 		// (setAsBox takes half-width and half-height as arguments)
@@ -290,14 +339,31 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		fixtureDef.density = 0.1f; 
 		fixtureDef.friction = 0.4f;
 		fixtureDef.restitution = 0f; // Make it bounce a little bit
+		fixtureDef.filter.categoryBits = type();
+		fixtureDef.filter.maskBits = (short) (type() | EntityType.Wall);
 		
-		Vector2 pos = new Vector2(10, 1);
+		Vector2 pos = new Vector2(10, 2);
 		
 		createDynamicBody(this, pos, fixtureDef);
 		body().setFixedRotation(true);
 		body().setUserData(this);
 		
 		playerBox.dispose();
+		
+		float			plhx	= (float)width()/2 / PPM;
+		
+		// Create a polygon shape
+		CircleShape armShape = new CircleShape();  
+			armShape.setRadius(width/2 / PPM + plhx);
+			armShape.setPosition(new Vector2(0, (height() / 2 * .66f) / PPM));
+		
+		FixtureDef armFixture = new FixtureDef();
+		armFixture.shape = armShape;
+		armFixture.isSensor = true;
+		//body().createFixture(armFixture);
+
+		//gostArms = new ArmGhost(game);
+		//gostArms.createPhysics(width/2 / PPM);
 	}
 	
 	//Reset move state
@@ -307,15 +373,14 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		inputJump 	= false;
 	}
 	
-	private void onWall(Entity ent, Vector2 norm){
-		if(ent != null && inputJump){
-			canWallJump = true;
-		}else{
-			canWallJump = false;
-		}
-		
+	private void onWall(Entity ent, Vector2 norm){		
 		onWall = ent;
 		wallNorm = norm;
+		
+		if(wallNorm != null){
+			wallNorm.x = Math.round(wallNorm.x);
+			wallNorm.y = Math.round(wallNorm.y);
+		}
 	}
 	
 	private void onGround(Entity ent){
@@ -335,17 +400,18 @@ public class PlayerEntity extends Entity implements InputProcessor {
 		return force;
 	}
 	
-	private Vector2 calculateJumpForce(){
-		Vector2 force = new Vector2();
+	private void renderDbg(SpriteBatch b){		
+		game.font.draw(b, "onWall: " + onWall(), 0 + game.camera().position.x/2, 0);
+		game.font.draw(b, "onGround: " + onGround(), 0 + game.camera().position.x/2, -15);
+		game.font.draw(b, "stuckToWall: " + stuckToWall, 0 + game.camera().position.x/2, -30);
 		
-		if(onGround()){
-			force.y = groundJump;
+		String wallNorm_str;
+		if(wallNorm == null){
+			wallNorm_str = "null";
 		}else{
-			force.y = wallJump;
+			wallNorm_str = wallNorm.x + ", " + wallNorm.y;
 		}
-		
-		return force;
-		
+		game.font.draw(b, "wallNorm: " + wallNorm_str, 100 + game.camera().position.x/2, 0);
 	}
 
 	public int width() { return width; }	

@@ -124,7 +124,7 @@ public class Level {
 					(Float)object.getProperties().get("x") / PPM,
 					(Float)object.getProperties().get("y") / PPM);
 			
-			Entity collisionEnt = Entity.createStaticBody(new Entity(EntityType.Wall, game), position, shape);
+			Entity collisionEnt = Entity.createStaticBody(new Entity(EntityType.Wall, game), position, shape, EntityType.Wall, EntityType.Player);
 			collisionEnt.body().setUserData(collisionEnt);
 			collisionEntities.add(collisionEnt);
 			shape.dispose();

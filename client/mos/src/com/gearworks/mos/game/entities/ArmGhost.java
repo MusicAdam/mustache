@@ -21,39 +21,34 @@ public class ArmGhost extends Entity {
 	private Joint joint;	
 	
 	//armLen: Length of arm in meters
-	public ArmGhost(float armLen, Client cRef) {
-		super(EntityType.Ghost, cRef);
-		
-		createPhysics(armLen);
+	public ArmGhost(Client cRef) {
+		super(EntityType.Sensor, cRef);
 	}
 	
 	public void createPhysics(float armLen){
 		PlayerEntity	pl		= game.player();
-		float			plhx	= (float)game.player().width() / PPM;
+		float			plhx	= (float)game.player().width()/2 / PPM;
 		
 		// Create a polygon shape
 		CircleShape ghostArms = new CircleShape();  
 			ghostArms.setRadius(armLen + plhx);
 		
 		// Create a fixture definition 
-		FixtureDef 	fixtureDef = new FixtureDef();
-			fixtureDef.shape = ghostArms;
-			fixtureDef.density = 0f; 
-			fixtureDef.friction = 0f;
-			fixtureDef.restitution = 0f; // Make it bounce a little bit
+		FixtureDef armFixture = new FixtureDef();
+			armFixture.shape = ghostArms;
+			armFixture.isSensor = true;
 		
 		//Create the body
-		createDynamicBody(this, new Vector2(), fixtureDef);
+		createDynamicBody(this, pl.body().getPosition(), armFixture);
 		body().setFixedRotation(true);
 		body().setUserData(this);
-		
 		
 		//Join to player
 		RevoluteJointDef 	joint = new RevoluteJointDef();
 			joint.bodyA = body();
 			joint.bodyB = pl.body();
 			joint.collideConnected 	= false;
-			joint.localAnchorA.set(0, (pl.height() / 2 * .66f) / PPM); //Arms are located like... at least 2/3 the way up your body?
+			joint.localAnchorA.set(0, -(pl.height() / 2 * .66f) / PPM); //Arms are located like... at least 2/3 the way up your body?
 			joint.localAnchorB.set(0, 0);
 			joint.referenceAngle = 0f;
 			joint.enableLimit = false;
@@ -62,5 +57,10 @@ public class ArmGhost extends Entity {
 		
 		//Clean up
 		ghostArms.dispose();
+	}
+	
+	@Override
+	public void update(){
+		
 	}
 }

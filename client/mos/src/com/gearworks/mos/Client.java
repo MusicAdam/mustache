@@ -26,6 +26,7 @@ public class Client implements ApplicationListener {
 	public static final	int V_HEIGHT = 400;
 	public static final float ASPECT_RATIO = (float)V_WIDTH/(float)V_HEIGHT;
 	public static final int SCALE = 2;
+	public static final float ZOOM = 5;
 	
 	public static final float STEP = 1 / 60f;
 	private float accum;
@@ -53,7 +54,7 @@ public class Client implements ApplicationListener {
 		//Camera
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, V_WIDTH, V_HEIGHT);
-		//camera.zoom = MPP;
+		camera.zoom = ZOOM/PPM;
 		updateViewport = false;
 		
 		//Box2d
@@ -67,7 +68,8 @@ public class Client implements ApplicationListener {
 		
 		
 		font = new BitmapFont();
-		font.setColor(Color.BLACK);
+		font.setScale(.8f);
+		font.setColor(Color.WHITE);
 	}
 
 	@Override
@@ -155,6 +157,7 @@ public class Client implements ApplicationListener {
 	public PlayerEntity player(){ 
 		if(player == null){
 			player = new PlayerEntity(this);
+			player.createPhysics();
 			inputMultiplexer.addProcessor(player);
 		}
 		

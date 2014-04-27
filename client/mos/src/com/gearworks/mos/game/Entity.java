@@ -14,7 +14,7 @@ import com.gearworks.mos.Client;
 //Should be shared 
 public class Entity {
 	private Body body;
-	private EntityType type;
+	private short type;
 	protected Client game;
 	
 	//Make sure to dispose of the fixture definition's shape 
@@ -36,7 +36,7 @@ public class Entity {
 	
 	//Make sure to dispose of the fixture definition's shape 
 	//Creates a static body and returns the associated entity
-	public static Entity createStaticBody(Entity ent, Vector2 pos, Shape shape) {
+	public static Entity createStaticBody(Entity ent, Vector2 pos, Shape shape, short categoryBits, short maskBits) {
 		//Create body def
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.StaticBody;
@@ -46,12 +46,14 @@ public class Entity {
 		ent.body = ent.game.world().createBody(bodyDef);
 		
 		//Create Fixture
-		ent.body.createFixture(shape, 0.0f);
+		Fixture fix = ent.body.createFixture(shape, 0.0f);
+		fix.getFilterData().categoryBits = categoryBits;
+		fix.getFilterData().maskBits = maskBits;
 		
 		return ent;
 	}
 	
-	public Entity(EntityType type, Client cRef){
+	public Entity(short type, Client cRef){
 		game = cRef;
 		this.type = type;
 	}
@@ -74,7 +76,7 @@ public class Entity {
 	public void beginContact(Entity ent, Contact contact){}
 	public void endContact(Entity ent, Contact contact){}
 
-	public EntityType type() {
+	public short type() {
 		return type;
 	}
 }
