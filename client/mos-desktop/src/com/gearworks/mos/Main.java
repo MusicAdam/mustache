@@ -11,5 +11,5 @@ public class Main {
 		cfg.height = Client.V_HEIGHT * Client.SCALE;
 		
 		new LwjglApplication(new Client(), cfg);
-	}
+	} 
 }

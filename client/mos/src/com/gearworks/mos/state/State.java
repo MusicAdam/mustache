@@ -1,5 +1,7 @@
 package com.gearworks.mos.state;
 
+import java.util.ArrayList;
+
 import com.gearworks.mos.Client;
 import com.gearworks.mos.game.Entity;
 
@@ -12,5 +14,6 @@ public interface State {
 	public boolean canExitState(Client game);
 	public void deleteEntity(Entity ent);
 	public void addEntity(Entity ent);
+	public ArrayList<Entity> entities();
 	public int getId();
 }

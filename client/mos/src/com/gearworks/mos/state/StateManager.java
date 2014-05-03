@@ -46,4 +46,6 @@ public class StateManager {
 		return true;
 	}
 	
+	public State state(){ return state; }
+	
 }

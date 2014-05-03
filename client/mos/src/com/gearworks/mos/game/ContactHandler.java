@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.gearworks.mos.game.entities.PlayerEntity;
 
 public class ContactHandler implements ContactListener {
 
@@ -58,19 +57,6 @@ public class ContactHandler implements ContactListener {
 	}
 	
 	public void sendContact(boolean begin, Entity entA, Entity entB, Contact contact){
-		//Handle player collisions
-		if(entA.type() == EntityType.Player){
-			PlayerEntity pl = (PlayerEntity)entA;
-			
-			if(entB.type() == EntityType.Wall){
-				if(begin){
-					pl.beginWallContact(entB, contact);
-				}else{
-					pl.endWallContact(entB, contact);
-					
-				}
-			}
-		}
 	}
 
 }
