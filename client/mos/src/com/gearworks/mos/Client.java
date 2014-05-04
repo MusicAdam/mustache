@@ -10,22 +10,23 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gearworks.mos.game.ContactHandler;
-import com.gearworks.mos.game.entities.PlayerEntity;
 import com.gearworks.mos.state.GameState;
+import com.gearworks.mos.state.State;
 import com.gearworks.mos.state.StateManager;
 
 public class Client implements ApplicationListener {
 	public static final String TITLE = "Mostache - Client";
-	public static final int V_WIDTH = 400;
-	public static final	int V_HEIGHT = 400;
+	public static final int V_WIDTH = 800;
+	public static final	int V_HEIGHT = 600;
 	public static final float ASPECT_RATIO = (float)V_WIDTH/(float)V_HEIGHT;
-	public static final int SCALE = 2;
+	public static final int SCALE = 1;
 	public static final float ZOOM = 5;
 	
 	public static final float STEP = 1 / 60f;
@@ -40,9 +41,9 @@ public class Client implements ApplicationListener {
 	private World world;
 	private OrthographicCamera camera;
 	private Box2DDebugRenderer dbgRenderer;
-	private PlayerEntity player;
 	private FPSLogger fpsLogger;
 	private InputMultiplexer inputMultiplexer;
+	private UserInterface ui;
 	
 	@Override
 	public void create() {	
@@ -51,21 +52,23 @@ public class Client implements ApplicationListener {
 		inputMultiplexer = new InputMultiplexer();
 		Gdx.input.setInputProcessor(inputMultiplexer);
 		
+		ui = new UserInterface(this);
+		inputMultiplexer.addProcessor(ui);
+		
 		//Camera
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, V_WIDTH, V_HEIGHT);
-		camera.zoom = ZOOM/PPM;
+		//camera.zoom = ZOOM/PPM;
 		updateViewport = false;
 		
 		//Box2d
-		world = new World(new Vector2(0, -10f), true);
+		world = new World(new Vector2(0, 0f), true);
 		world.setContactListener(new ContactHandler());
 		dbgRenderer = new Box2DDebugRenderer();
 		
 		//State Manager
 		sm = new StateManager(this);
 		sm.setState(new GameState());
-		
 		
 		font = new BitmapFont();
 		font.setScale(.8f);
@@ -104,6 +107,8 @@ public class Client implements ApplicationListener {
 			sm.update();
 			camera.update();
 			
+			ui.render();
+			
 			//Step
 			world.step(1/60f, 6, 2);
 		}
@@ -111,10 +116,7 @@ public class Client implements ApplicationListener {
 
 		sm.render();
 		Matrix4 dbgMatrix = camera.combined.cpy().scl(PPM);
-		//dbgRenderer.render(world, dbgMatrix);
-		
-		
-		
+		dbgRenderer.render(world, dbgMatrix);
 		
 		//fpsLogger.log();
 	}
@@ -152,15 +154,5 @@ public class Client implements ApplicationListener {
 	
 	public OrthographicCamera camera(){ return camera; }
 	public World world(){ return world; }
-	
-	//singleton player 
-	public PlayerEntity player(){ 
-		if(player == null){
-			player = new PlayerEntity(this);
-			player.createPhysics();
-			inputMultiplexer.addProcessor(player);
-		}
-		
-		return player;
-	}
+	public State state(){ return sm.state(); }
 }

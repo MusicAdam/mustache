@@ -3,19 +3,20 @@ package com.gearworks.mos.state;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.gearworks.mos.Client;
 import com.gearworks.mos.game.Entity;
-import com.gearworks.mos.game.levels.TestLevel;
+import com.gearworks.mos.game.ships.Ship;
 
 public class GameState implements State {
 	private static int ID = 0;
 
-	protected List<Entity> entities;
+	protected ArrayList<Entity> entities;
 	protected SpriteBatch batch;
 	
-	private TestLevel testLevel;
+	public Ship ship;
 
 	@Override
 	public void render(Client game) {
@@ -26,7 +27,6 @@ public class GameState implements State {
 			ent.render(batch);
 		}
 		batch.end();
-		testLevel.render();
 	}
 
 	@Override
@@ -34,21 +34,17 @@ public class GameState implements State {
 		for(Entity ent : entities){
 			ent.update();
 		}
-		
-		testLevel.update();
-		
-		Vector2 plPos = game.player().getPosition();
-		game.camera().position.set(game.camera().position.x + (plPos.x - game.camera().position.x)/4, game.camera().position.y + (plPos.y - game.camera().position.y)/4, 0f);
 	}
 
 	@Override
 	public void onEnter(Client game) {				
 		entities = new ArrayList<Entity>();
-		batch = new SpriteBatch();		
+		batch = new SpriteBatch();	
 		
-		testLevel = new TestLevel(game);
+		ship = new Ship(game);
+		ship.createPhysics();
 		
-		addEntity(game.player());
+		addEntity(ship);
 		
 		System.out.println("[GameState::onEnter]");
 	}
@@ -79,6 +75,11 @@ public class GameState implements State {
 	@Override
 	public void addEntity(Entity ent) {
 		entities.add(ent);
+	}
+
+	@Override
+	public ArrayList<Entity> entities() {
+		return entities;
 	}
 	
 

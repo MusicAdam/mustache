@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="8" tileheight="8">
+ <objectgroup name="ship" width="20" height="20">
+  <object name="hull" type="ship_hull" x="64" y="48" width="32" height="64">
+   <properties>
+    <property name="hitpoints" value="100"/>
+   </properties>
+  </object>
+  <object x="80" y="24">
+   <polyline points="0,0 8,0 16,8 24,16 32,32 32,48 32,64 32,72 24,88 16,96 8,104 -8,104 -16,96 -24,88 -32,72 -32,64 -32,48 -32,40 -24,16 -16,8 -8,0 0,0"/>
+  </object>
+ </objectgroup>
+</map>
