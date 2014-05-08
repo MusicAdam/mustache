@@ -2,6 +2,7 @@ package com.gearworks.mos.state;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gearworks.mos.Client;
 import com.gearworks.mos.game.Entity;
 

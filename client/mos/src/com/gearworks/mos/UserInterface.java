@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -16,7 +17,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.gearworks.mos.game.Entity;
-import com.gearworks.mos.game.ships.Ship;
+import com.gearworks.mos.game.entities.Ship;
 import com.gearworks.mos.state.GameState;
 
 public class UserInterface implements InputProcessor{
@@ -125,7 +126,7 @@ public class UserInterface implements InputProcessor{
 		return false;
 	}
 	
-	public void render(){
+	public void render(SpriteBatch batch){
 		renderer.setProjectionMatrix(game.camera().combined);
 		renderer.identity();
 		
@@ -148,27 +149,30 @@ public class UserInterface implements InputProcessor{
 				float height= aabb.max.y - aabb.min.y;
 				float x = aabb.max.x - width/2;
 				float y = aabb.max.y - height/2;
-						
-				Utils.drawRect(renderer, Color.GREEN, ent.position().x + x * PPM - selectionPadding / 2, ent.position().y + y * PPM - selectionPadding /2, width * PPM + selectionPadding, height * PPM + selectionPadding);
-			}
-		}
-		
-		if(game.state() instanceof GameState){
-			GameState gs = (GameState)game.state();
-			if(gs.ship != null){
-				Vector2 v1 = gs.ship.position();
-				Vector2 v2 = gs.ship.destination();
-				if(v1 != null && v2 != null)
-					Utils.drawLine(renderer,  Color.GREEN, v1.x, v1.y,  v2.x,  v2.y);
-				v1 = gs.ship.position();
-				v2 = gs.ship.direction().cpy().scl(gs.ship.height()/2).add(v1);
-				if(v1 != null && v2 != null)
-					Utils.drawLine(renderer,  Color.CYAN, v1.x, v1.y,  v2.x,  v2.y);
-				v1 = gs.ship.position();
-				v2 = gs.ship.thrustDirection().cpy().scl(10).add(v1);
-				if(v1 != null && v2 != null)
-					Utils.drawLine(renderer,  Color.ORANGE, v1.x, v1.y,  v2.x,  v2.y);
 				
+				//Draw aabb
+				Utils.drawRect(renderer, Color.GREEN, ent.position().x + x * PPM - selectionPadding / 2, ent.position().y + y * PPM - selectionPadding /2, width * PPM + selectionPadding, height * PPM + selectionPadding);
+
+				if(ent instanceof Ship){
+					//Draw the forces being applied to selected ships
+					Ship ship = (Ship)ent;
+					Vector2 v1 = ship.position();
+					Vector2 v2 = ship.destination();
+					if(v1 != null && v2 != null)
+						Utils.drawLine(renderer,  Color.GREEN, v1.x, v1.y,  v2.x,  v2.y);
+					v1 = ship.position();
+					v2 = ship.direction().cpy().scl(ship.height()/2).add(v1);
+					if(v1 != null && v2 != null)
+						Utils.drawLine(renderer,  Color.CYAN, v1.x, v1.y,  v2.x,  v2.y);
+					v1 = ship.thrusterPosition().cpy().add(ship.position());
+					v2 = ship.thrustDirection().cpy().scl(10).add(v1);
+					if(v1 != null && v2 != null)
+						Utils.drawLine(renderer,  Color.ORANGE, v1.x, v1.y,  v2.x,  v2.y);
+					//Draw UI Debug hints
+					batch.begin();
+						game.font.draw(batch, "Speed: " + ship.currentSpeed(), ship.position().x + ship.width()/2, ship.position().y + ship.height()/2);
+					batch.end();
+				}
 			}
 		}
 	}

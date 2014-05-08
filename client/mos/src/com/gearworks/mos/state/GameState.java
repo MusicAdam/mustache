@@ -8,25 +8,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.gearworks.mos.Client;
 import com.gearworks.mos.game.Entity;
-import com.gearworks.mos.game.ships.Ship;
+import com.gearworks.mos.game.entities.Ship;
 
 public class GameState implements State {
 	private static int ID = 0;
 
 	protected ArrayList<Entity> entities;
-	protected SpriteBatch batch;
 	
 	public Ship ship;
 
 	@Override
 	public void render(Client game) {
-		batch.setProjectionMatrix(game.camera().combined);
-		batch.begin();
-		game.font.draw(batch, "GameState.render()", 100, 50);
+		game.batch().setProjectionMatrix(game.camera().combined);
+		game.batch().begin();
 		for(Entity ent : entities){
-			ent.render(batch);
+			ent.render(game.batch());
 		}
-		batch.end();
+		game.batch().end();
 	}
 
 	@Override
@@ -39,7 +37,6 @@ public class GameState implements State {
 	@Override
 	public void onEnter(Client game) {				
 		entities = new ArrayList<Entity>();
-		batch = new SpriteBatch();	
 		
 		ship = new Ship(game);
 		ship.createPhysics();

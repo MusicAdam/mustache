@@ -18,6 +18,9 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.gearworks.mos.game.Entity;
 
 public class Utils {
+	public static float PI 	= (float)Math.PI;
+	public static float PI_TIMES_2 = PI * 2;
+	public static float PI_OVER_2 = PI / 2;
 	
 	//TODO: Update this to check for overlapping entity bounds rather than entity point position in bounds
 	public static ArrayList<Entity> findEntitiesInBox(ArrayList<Entity> haystack, Rectangle bounds){
@@ -302,9 +305,12 @@ public class Utils {
 		r.end();
 	}
 	
-	public static boolean isWithin(Vector2 v, Vector2 test, float e){
-		//System.out.println(v + ", " + test);
-		return (	v.x < test.x + e && v.x > test.x - e &&
-					v.y < test.y + e && v.y > test.y - e );
+	public static boolean epsilonEquals(float x, float y, float e){
+		return ( x < y + e && x > y - e );
+	}
+	
+	public static float angle(Vector2 v1, Vector2 v2){
+		return (float)Math.acos( v1.dot(v2) /
+					( v1.len() * v2.len() ) );
 	}
 }

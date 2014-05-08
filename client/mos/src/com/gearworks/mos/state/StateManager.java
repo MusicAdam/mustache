@@ -1,5 +1,6 @@
 package com.gearworks.mos.state;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gearworks.mos.Client;
 
 public class StateManager {

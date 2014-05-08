@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
@@ -44,6 +45,8 @@ public class Client implements ApplicationListener {
 	private FPSLogger fpsLogger;
 	private InputMultiplexer inputMultiplexer;
 	private UserInterface ui;
+
+	private SpriteBatch batch;
 	
 	@Override
 	public void create() {	
@@ -73,6 +76,9 @@ public class Client implements ApplicationListener {
 		font = new BitmapFont();
 		font.setScale(.8f);
 		font.setColor(Color.WHITE);
+		
+
+		batch = new SpriteBatch();	
 	}
 
 	@Override
@@ -107,16 +113,16 @@ public class Client implements ApplicationListener {
 			sm.update();
 			camera.update();
 			
-			ui.render();
 			
 			//Step
-			world.step(1/60f, 6, 2);
+			world.step(STEP, 6, 2);
 		}
 		
 
 		sm.render();
 		Matrix4 dbgMatrix = camera.combined.cpy().scl(PPM);
 		dbgRenderer.render(world, dbgMatrix);
+		ui.render(batch);
 		
 		//fpsLogger.log();
 	}
@@ -155,4 +161,5 @@ public class Client implements ApplicationListener {
 	public OrthographicCamera camera(){ return camera; }
 	public World world(){ return world; }
 	public State state(){ return sm.state(); }
+	public SpriteBatch batch() { return batch; }
 }
